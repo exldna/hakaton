@@ -5,7 +5,8 @@ class Interaction(object):
         self.db = db
 
     def get_token(self) -> str:
-        raise NotImplementedError("you must immplement get_token to use Interaction child")
+        raise NotImplementedError("you must implement get_token to use Interaction child")
+
 
 class MasterInteraction(Interaction):
     def __init__(self, db: DataBase) -> None:
@@ -20,6 +21,15 @@ class MasterInteraction(Interaction):
     def create_user(self, name: str ):
         self.db.execute("INSERT INTO users(name) VAlUES({})".format(name, None, None))
 
+    def create_event(self, users: list, event: str) -> None:
+        for user in users:
+            self.db.execute("INSERT INTO users(active_events) VALUES({}) WHERE name={};".format(event, user))
+            self.db.execute("INSERT INTO users(personal_events) VALUES({}) WHERE name={};".format(event, user))
+
+    def get_event(self, user: str, datetime)->str:
+        answer = str(self.db.execute("""SELECT active_events FROM users WHERE ;"""))
+        return answer
+
     @property
     def get_user(self) -> str:
         answer = str(self.db.execute("SELECT * FROM users"))
@@ -32,6 +42,7 @@ class MasterInteraction(Interaction):
         for user in users:
             self.db.execute("INSERT INTO users(active_events) VALUES({}) WHERE name={}".format(event, user))
             self.db.execute("INSERT INTO users(personal_events) VALUES({}) WHERE name={}".format(event, user))
+
 
 class LinkerInteraction(Interaction):
     def __init__(self, db: DataBase) -> None:

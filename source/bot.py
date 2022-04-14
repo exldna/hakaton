@@ -8,12 +8,15 @@ from .interaction import \
     MasterInteraction, \
     LinkerInteraction
 
+
 class Bot(object):
     def __init__(self, token: str) -> None:
         self.bot = TeleBot(token)
 
     def polling(self) -> None:
         self.bot.polling()
+
+
 
 class MasterBot(Bot):
     def __init__(self, db: DataBase) -> None:

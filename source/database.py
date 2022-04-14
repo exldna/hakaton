@@ -49,3 +49,5 @@ class DataBase(object):
         self.cursor.execute(request)
         self.connect.commit()
         return self.cursor.fetchall()
+
+    
