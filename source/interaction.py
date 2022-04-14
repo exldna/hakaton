@@ -52,7 +52,7 @@ class MasterInteraction(Interaction):
             self.db.execute("INSERT INTO users(personal_events) VALUES({}) WHERE name={};".format(event, user))
 
     def get_event(self, user: str, datetime)->str:
-        answer = str(self.db.execute("""SELECT active_events FROM users WHERE ;"""))
+        answer = str(self.db.execute("""SELECT active_events FROM users WHERE;"""))
         return answer
 
     @property
@@ -61,12 +61,12 @@ class MasterInteraction(Interaction):
         return answer
 
     def set_event(self, username: str, event:str)->None:
-        self.db.execute("INSERT INTO users(active_events) VALUES({}) WHERE name={}".format(event, username))
+        self.db.execute("INSERT INTO users(active_events) VALUES({}) WHERE name={};".format(event, username))
 
     def create_event(self, users: list, event: str) -> None:
         for user in users:
-            self.db.execute("INSERT INTO users(active_events) VALUES({}) WHERE name={}".format(event, user))
-            self.db.execute("INSERT INTO users(personal_events) VALUES({}) WHERE name={}".format(event, user))
+            self.db.execute("INSERT INTO users(active_events) VALUES({}) WHERE name={};".format(event, user))
+            self.db.execute("INSERT INTO users(personal_events) VALUES({}) WHERE name={};".format(event, user))
 
 
 class LinkerInteraction(Interaction):
