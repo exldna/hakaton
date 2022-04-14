@@ -6,16 +6,17 @@ class Interaction(object):
         db.execute("""
             CREATE TABLE users IF NOT EXISTS(
                 name TEXT,
-                subscribed_events: TEXT
+                subscribed_events integer ARRAY,
+                events integer ARRAY
             );
         """)
         db.execute("""
            CREATE TABLE event IF NOT EXISTS(
                 title TEXT,
                 description TEXT,
-                datetime: DATETIME,
-                subscribed_users TEXT,
-                owner_id : INT,
+                datetime DATETIME,
+                subscribed_users integer ARRAY,
+                owner_id INT,
                 is_pubic BOOlEAN
            );
         """)
@@ -24,7 +25,7 @@ class Interaction(object):
                    CREATE TABLE event_type IF NOT EXISTS(
                         title TEXT,
                         description TEXT,
-                        owner_id : INT,
+                        owner_id INT,
                         is_pubic BOOlEAN
                    );
                 """)
@@ -64,9 +65,12 @@ class MasterInteraction(Interaction):
         self.db.execute("INSERT INTO users(active_events) VALUES({}) WHERE name={};".format(event, username))
 
     def create_event(self, users: list, event: str) -> None:
+        
+
         for user in users:
             self.db.execute("INSERT INTO users(active_events) VALUES({}) WHERE name={};".format(event, user))
             self.db.execute("INSERT INTO users(personal_events) VALUES({}) WHERE name={};".format(event, user))
+
 
 
 class LinkerInteraction(Interaction):
