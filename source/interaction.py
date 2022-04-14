@@ -64,8 +64,8 @@ class MasterInteraction(Interaction):
     def set_event(self, username: str, event:str)->None:
         self.db.execute("INSERT INTO users(active_events) VALUES({}) WHERE name={};".format(event, username))
 
-    def create_event(self, users: list, event: str) -> None:
-        
+    def create_event(self, users: list, event: str):
+        self.db.execute("INSERT INTO ")
 
         for user in users:
             self.db.execute("INSERT INTO users(active_events) VALUES({}) WHERE name={};".format(event, user))
