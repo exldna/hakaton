@@ -9,9 +9,10 @@ class Bot:
         self.token = "5378053989:AAFbBy8S8zD5MxSuOBU9eX58LmxefFOkLFA"
         self.bot = TeleBot(self.token)
 
-        @self.bot.message_handler(commands=["start"])
+        @self.bot.message_handler(commands=["msg"])
         def start_message(message):
-            self.bot.send_message(message.chat.id, "Hi!")
+            msg = self.act.get_msg()
+            self.bot.send_message(message.chat.id, msg)
 
     def start(self) -> None:
         self.bot.infinity_polling()

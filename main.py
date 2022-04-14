@@ -4,7 +4,8 @@ from source.interaction import Interaction
 
 def main():
     db = DataBase()
-    bot = Bot(db)
+    act = Interaction(db)
+    bot = Bot(act)
     bot.start()
 
 if __name__ == "__main__":
