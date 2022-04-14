@@ -5,19 +5,32 @@ class Interaction(object):
         self.db = db
         db.execute(
             """
-            CREATE TABLE IF NOT EXISTS users(
+            CREATE TABLE IF NOT EXISTS hello(
                 Hello TEXT
             );
             """
         )
         db.execute(
             """
-            INSERT INTO users(Hello) VALUES ('Привет!');
+                CREATE TABLE IF NOT EXISTS users(
+                    id INT,
+                    name TEXT,
+                    personal_events TEXT,
+                    active_events TEXT
+                );
             """
         )
+        db.execute("""
+            TRUNCATE TABLE hello
+        """)
+        # db.execute(
+        #     """
+        #     INSERT INTO users(Hello) VALUES ('Привет!');
+        #     """
+        # )
 
     def get_msg(self) -> str:
-        answer = str(self.db.execute("SELECT Hello from users"))
+        answer = str(self.db.execute("SELECT Hello from hello"))
         print(answer)
         return answer
 
@@ -25,9 +38,3 @@ class Interaction(object):
         self.db.execute("INSERT users(")
 
 
-
-
-
-
-=======
->>>>>>> 4dbea877fb2a3f3e86b2289283fa0c1e6c7adc6f
