@@ -13,28 +13,29 @@ class Interaction(object):
         db.execute(
             """
                 CREATE TABLE IF NOT EXISTS users(
-                    id INT,
                     name TEXT,
                     personal_events TEXT,
                     active_events TEXT
                 );
             """
         )
-        db.execute("""
-            TRUNCATE TABLE hello;
-        """)
-        # db.execute(
-        #     """
-        #     INSERT INTO users(Hello) VALUES ('Привет!');
-        #     """
-        # )
+        db.execute(
+            """
+            INSERT INTO hello(Hello) VALUES ('Привет!');
+            """
+        )
 
     def get_msg(self) -> str:
         answer = str(self.db.execute("SELECT Hello from hello"))
         print(answer)
         return answer
 
-    def create_user(self):
-        self.db.execute("INSERT users(")
+    def create_user(self, name: str ):
+        self.db.execute("INSERT INTO users(name) VAlUES({})".format(name))
+
+    @property
+    def get_user(self) -> str:
+        answer = str(self.db.execute("SELECT * FROM users"))
+        return answer
 
 
