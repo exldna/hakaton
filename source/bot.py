@@ -27,6 +27,8 @@ class MasterBot(Bot):
         def say_hello(message):
             self.bot.send_message(message.chat.id, "hi!")
 
+        @self.bot.message_handler(commands = )
+
 class LinkerBot(Bot):
     def __init__(self, db: DataBase) -> None:
         self.act = LinkerInteraction(db)

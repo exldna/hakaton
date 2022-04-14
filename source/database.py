@@ -50,4 +50,4 @@ class DataBase(object):
         self.connect.commit()
         return self.cursor.fetchall()
 
-    
+

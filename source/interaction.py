@@ -3,6 +3,31 @@ from .database import DataBase
 class Interaction(object):
     def __init__(self, db: DataBase) -> None:
         self.db = db
+        db.execute("""
+            CREATE TABLE users IF NOT EXISTS(
+                name TEXT,
+                subscribed_events: TEXT
+            );
+        """)
+        db.execute("""
+           CREATE TABLE event IF NOT EXISTS(
+                title TEXT,
+                description TEXT,
+                datetime: DATETIME,
+                subscribed_users TEXT,
+                owner_id : INT,
+                is_pubic BOOlEAN
+           );
+        """)
+
+        db.execute("""
+                   CREATE TABLE event_type IF NOT EXISTS(
+                        title TEXT,
+                        description TEXT,
+                        owner_id : INT,
+                        is_pubic BOOlEAN
+                   );
+                """)
 
     def get_token(self) -> str:
         raise NotImplementedError("you must implement get_token to use Interaction child")
