@@ -46,6 +46,10 @@ class Interaction(object):
             self.db.execute("INSERT INTO users(active_events) VALUES({}) WHERE name={}".format(event, user))
             self.db.execute("INSERT INTO users(personal_events) VALUES({}) WHERE name={}".format(event, user))
 
+    def get_event(self, user: str, datetime)->str:
+        answer = str(self.db.execute("""SELECT """))
+        return answer
+
 
 
 
