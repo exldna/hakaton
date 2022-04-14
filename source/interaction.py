@@ -51,5 +51,3 @@ class Interaction(object):
         return answer
 
 
-
-
