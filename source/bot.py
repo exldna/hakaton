@@ -20,6 +20,10 @@ class MasterBot(Bot):
         self.act = MasterInteraction(db)
         super().__init__(self.act.get_token())
 
+        @self.bot.message_handler(commands=["hello"])
+        def say_hello(message):
+            self.bot.send_message(message.chat.id, "hi!")
+
 class LinkerBot(Bot):
     def __init__(self, db: DataBase) -> None:
         self.act = LinkerInteraction(db)
