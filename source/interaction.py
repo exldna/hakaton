@@ -23,11 +23,3 @@ class Interaction(object):
 
     def create_user(self):
         self.db.execute("INSERT users(")
-
-
-
-
-
-
-=======
->>>>>>> 4dbea877fb2a3f3e86b2289283fa0c1e6c7adc6f
