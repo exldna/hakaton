@@ -5,6 +5,7 @@ class Interaction:
     table = []
     def find_user(self,id):
         return users['id']
+    
 
     def add_personal_event(self, user):
         pass
