@@ -1,10 +1,6 @@
-from source.bot import \
-    MasterBot, \
-    LinkerBot
-
+from source.bot import MasterBot
 from source.database import DataBase
 
-from time import sleep
 
 def private_info(db: DataBase):
     db.execute(
@@ -26,15 +22,13 @@ def private_info(db: DataBase):
         """
     )
 
+
 def main():
     db = DataBase()
-    # private_info(db)
+    private_info(db)
     master_bot = MasterBot(db)
-    linker_bot = LinkerBot(db)
+    master_bot.start()
 
-    while True:
-        master_bot.polling()
-        linker_bot.polling()
 
 if __name__ == "__main__":
     main()
