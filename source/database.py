@@ -5,13 +5,12 @@ from queue import Queue
 
 class DataBase(object):
     def __init__(self, name: str = "db") -> None:
-        def init():
-            self.connect = sqlite3.connect(name + ".sqlite")
-            self.cursor = self.connect.cursor()
 
         def run():
-            init()
-            while True:
+            self.connect = sqlite3.connect(name + ".sqlite")
+            # TODO: multiple cursors
+            self.cursor = self.connect.cursor()
+            while self.is_running:
                 item = self.queue.get()
                 self.last_ans = self.__execute(item)
                 self.is_get = False
@@ -19,6 +18,7 @@ class DataBase(object):
         self.queue = Queue()
         self.thread = Thread(target=run)
 
+        self.is_running = True
         self.is_get = True
         self.last_ans = None
 
@@ -26,6 +26,8 @@ class DataBase(object):
 
     def __del__(self) -> None:
         self.connect.close()
+        self.is_running = False
+        self.thread.join()
 
     def execute(self, request: str):
         self.queue.put(request)
