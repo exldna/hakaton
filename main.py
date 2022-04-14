@@ -1,5 +1,8 @@
+import source.bot
+
 def main():
-    pass
+    bot = source.bot.Bot()
+    
 
 if __name__ == "__main__":
-    main(
+    main()
