@@ -1,7 +1,10 @@
-import source.bot
+from source.bot import Bot
+from source.database import DataBase
 
 def main():
-    bot = source.bot.Bot()
+    db = DataBase()
+    bot = Bot(db)
+    bot.start()
 
 if __name__ == "__main__":
     main()
