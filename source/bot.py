@@ -1,19 +1,30 @@
 from telebot import TeleBot
 from telebot import types as tb_types
-from .interaction import Interaction
 
-class Bot:
-    def __init__(self, act: Interaction) -> None:
-        self.act = act
+from .database import DataBase
 
-        # TODO: заприватить токен
-        self.token = "5378053989:AAFbBy8S8zD5MxSuOBU9eX58LmxefFOkLFA"
-        self.bot = TeleBot(self.token)
+from .interaction import \
+    Interaction, \
+    MasterInteraction, \
+    LinkerInteraction
 
-        @self.bot.message_handler(commands=["msg"])
-        def message(message):
-            msg = self.act.get_msg()
-            self.bot.send_message(message.chat.id, msg)
 
-    def start(self) -> None:
-        self.bot.infinity_polling()
+class Bot(object):
+    def __init__(self, token: str) -> None:
+        self.bot = TeleBot(token)
+
+    def polling(self) -> None:
+        self.bot.polling()
+
+
+
+class MasterBot(Bot):
+    def __init__(self, db: DataBase) -> None:
+        self.act = MasterInteraction(db)
+        super().__init__(self.act.get_token())
+
+
+class LinkerBot(Bot):
+    def __init__(self, db: DataBase) -> None:
+        self.act = LinkerInteraction(db)
+        super().__init__(self.act.get_token())
