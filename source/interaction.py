@@ -21,7 +21,7 @@ class Interaction(object):
             """
         )
         db.execute("""
-            TRUNCATE TABLE hello
+            TRUNCATE TABLE hello;
         """)
         # db.execute(
         #     """
