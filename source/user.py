@@ -1,2 +1,6 @@
 class User:
-    pass
+    def __init__(self, name):
+        self.name = name
+
+    def subcribe(self, title,  datetime):
+        pass
