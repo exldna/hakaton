@@ -1,10 +1,11 @@
-import bot
-from sqlite3 import users, standard_events
+from .database import DataBase
 
-class Interaction:
-    table = []
-    def find_user(self,id):
-        return users['id']
+class Interaction(object):
+    def __init__(self, db: DataBase) -> None:
+        self.db = db
+
+    def find_user(self, id):
+        return
     
 
     def add_personal_event(self, user):
@@ -12,6 +13,3 @@ class Interaction:
 
     def add_group_event(self, group):
         pass
-
-
-

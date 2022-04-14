@@ -1,10 +1,9 @@
 from telebot import TeleBot
-from .database import DataBase
+from .interaction import Interaction
 
 class Bot:
-    def __init__(self, db: DataBase) -> None:
-
-        self.db = db
+    def __init__(self, act: Interaction) -> None:
+        self.act = act
 
         # TODO: заприватить токен
         self.token = "5378053989:AAFbBy8S8zD5MxSuOBU9eX58LmxefFOkLFA"
