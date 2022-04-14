@@ -1,21 +1,13 @@
-import bot
-from database import DataBase
+from .database import DataBase
 
-class Interaction:
-    def __init__(self):
-        db = DataBase()
-        db.execute("")
-    def create_user(self, request):
-        self.user.execute(request)
+class Interaction(object):
+    def __init__(self, db: DataBase) -> None:
+        self.db = db
+        db.execute("CREATE TABLE table(Hello, varchar(255)")
+        db.execute("INSERT table(Hello) VALUES ('Привет!')")
 
-    def find_user(self,id):
+    def get_msg(self) -> str:
+        answer = str(self.db.execute("SELECT Hello from table"))
+        return answer
 
-
-    def add_personal_event(self, user):
-        pass
-
-    def add_group_event(self, group):
-        pass
-
-
-
+    
