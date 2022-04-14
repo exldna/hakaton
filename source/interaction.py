@@ -1,11 +1,15 @@
 import bot
-from sqlite3 import users, standard_events
+from database import DataBase
 
 class Interaction:
-    table = []
+    def __init__(self):
+        db = DataBase()
+        db.execute("")
+    def create_user(self, request):
+        self.user.execute(request)
+
     def find_user(self,id):
-        return users['id']
-    
+
 
     def add_personal_event(self, user):
         pass
