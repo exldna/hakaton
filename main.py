@@ -1,6 +1,7 @@
 from source.bot import MasterBot
 from source.database import DataBase
 
+
 def private_info(db: DataBase):
     db.execute(
         """
@@ -21,11 +22,13 @@ def private_info(db: DataBase):
         """
     )
 
+
 def main():
     db = DataBase()
-    # private_info(db)
+    private_info(db)
     master_bot = MasterBot(db)
     master_bot.start()
+
 
 if __name__ == "__main__":
     main()

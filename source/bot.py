@@ -16,6 +16,7 @@ class Bot(object):
     def start(self) -> None:
         self.bot.infinity_polling()
 
+
 class MasterBot(Bot):
     def __init__(self, db: DataBase) -> None:
         self.act = MasterInteraction(db)
@@ -25,8 +26,16 @@ class MasterBot(Bot):
         def say_hello(message):
             comm = message.text.split(" ")
             match comm[0]:
-                case "hello":
-                    self.bot.send_message(message.chat.id, "hi, " + comm[1])
+                case "start":
+                    self.act.create_user(message.from_user.username)
+                    self.bot.send_message(message.chat.id, "hello")
+                case "create":
+                    if len(comm) != 2:
+                        self.bot.send_message(
+                            message.chat.id, "filed: wrong args nums")
+                    self.act.create_event(
+                        [message.from_user.username], comm[1])
+
 
 class LinkerBot(Bot):
     def __init__(self, db: DataBase) -> None:

@@ -5,18 +5,20 @@ import sqlite3
 
 # from time import sleep
 
+
 class DataBase(object):
     def __init__(self, name: str = "db") -> None:
-        self.connect = sqlite3.connect(name + ".sqlite", check_same_thread=False)
+        self.connect = sqlite3.connect(
+            name + ".sqlite", check_same_thread=False)
         self.cursor = self.connect.cursor()
 
         # def run():
-            # TODO: multiple cursors
-            # while self.is_running:
-                # item = self.queue.get()
-                # if item != "":
-                    # self.last_ans = self.__execute(item)
-                    # self.is_get = False
+        # TODO: multiple cursors
+        # while self.is_running:
+        # item = self.queue.get()
+        # if item != "":
+        # self.last_ans = self.__execute(item)
+        # self.is_get = False
 
         # self.queue = Queue()
         # self.thread = Thread(target=run)
@@ -45,6 +47,6 @@ class DataBase(object):
 
     # def get(self):
         # while self.is_get:
-            # sleep(0.01)
+        # sleep(0.01)
         # self.is_get = True
-        # return self.last_ans    
+        # return self.last_ans
