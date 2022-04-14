@@ -1,4 +1,5 @@
 from telebot import TeleBot
+from telebot import types as tb_types
 from .interaction import Interaction
 
 class Bot:
@@ -10,7 +11,7 @@ class Bot:
         self.bot = TeleBot(self.token)
 
         @self.bot.message_handler(commands=["msg"])
-        def start_message(message):
+        def message(message):
             msg = self.act.get_msg()
             self.bot.send_message(message.chat.id, msg)
 
