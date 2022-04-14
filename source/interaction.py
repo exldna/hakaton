@@ -10,4 +10,11 @@ class Interaction(object):
         answer = str(self.db.execute("SELECT Hello from table"))
         return answer
 
-    
+    def create_user(self):
+        self.db.execute("INSERT users(")
+
+
+
+
+
+
