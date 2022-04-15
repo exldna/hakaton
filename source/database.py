@@ -7,9 +7,13 @@ import sqlite3
 
 
 class DataBase(object):
+    # TODO: write thread-safety DB
+    # TODO: create DB backgrounds
+
     def __init__(self, name: str = "db") -> None:
         self.connect = sqlite3.connect(
             name + ".sqlite", check_same_thread=False)
+
         self.cursor = self.connect.cursor()
 
         # def run():
@@ -40,6 +44,51 @@ class DataBase(object):
         self.cursor.execute(request)
         self.connect.commit()
         return self.cursor.fetchall()
+
+    def create_tables(self):
+        self.execute("""
+            CREATE TABLE IF NOT EXISTS users(
+                id INTEGER PRIMARY KEY,
+                name TEXT,
+                events integer ARRAY,
+                subscribed_events integer ARRAY
+            );
+        """)
+
+        self.execute("""
+            CREATE TABLE IF NOT EXISTS events(
+                id INTEGER PRIMARY KEY,
+                base_type INT UNSIGNED NOT NULL,
+                datetime DATETIME,
+                subscribed_users integer ARRAY
+            );
+        """)
+
+        self.execute("""
+            CREATE TABLE IF NOT EXISTS event_types(
+                id INTEGER PRIMARY KEY,
+                owner INT UNSIGNED NOT NULL,
+                name TEXT,
+                description TEXT,
+                is_pubic BOOlEAN
+            );
+        """)
+
+    def insert_private_info(self):
+        self.execute("""
+            CREATE TABLE IF NOT EXISTS private_info(
+                master_token TEXT,
+                linker_token TEXT
+            );
+        """)
+
+        self.execute("""
+            INSERT INTO private_info(master_token, linker_token) 
+            VALUES (
+                '5378053989:AAFbBy8S8zD5MxSuOBU9eX58LmxefFOkLFA',
+                '5157776609:AAGVT7kYK_ep0Ezu3Fz2-tcav7lfAe1poDQ'
+            );
+        """)
 
     # def __execute(self, request: str):
         # self.queue.put(request)

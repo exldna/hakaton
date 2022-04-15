@@ -5,43 +5,25 @@ class Interaction(object):
     def __init__(self, db: DataBase) -> None:
         self.db = db
 
-        db.execute(
-            """
-            CREATE TABLE IF NOT EXISTS users(
-                name TEXT,
-                subscribed_events integer ARRAY,
-                events integer ARRAY
-            );
-            """
-        )
-        
-        db.execute(
-            """
-            CREATE TABLE IF NOT EXISTS events(
-                title TEXT,
-                description TEXT,
-                datetime DATETIME,
-                subscribed_users integer ARRAY,
-                owner_id INT,
-                is_pubic BOOlEAN
-            );
-            """
-        )
-
-        db.execute(
-            """
-            CREATE TABLE IF NOT EXISTS event_types(
-                title TEXT,
-                description TEXT,
-                owner_id INT,
-                is_pubic BOOlEAN
-            );
-            """
-        )
-
     def get_token(self) -> str:
         raise NotImplementedError(
             "you must implement get_token to use Interaction child")
+
+    def _get_id_by_name(self, name: str, table: str) -> int:
+        id = self.db.execute(f"""
+            SELECT id FROM {table} WHERE name = \'{name}\';
+        """)
+        if len(id) != 0:
+            return id[0][0]
+        return None
+
+    def _select(self, name: str, table: str) -> list:
+        return self.db.execute(f"""
+            SELECT id, name FROM {table} WHERE name = \'{name}\';
+        """)
+
+    def _exists(self, name: str, table: str) -> bool:
+        return len(self._select(name, table)) != 0
 
 
 class MasterInteraction(Interaction):
@@ -54,28 +36,43 @@ class MasterInteraction(Interaction):
         """)
         return token[0][0]
 
-    def create_user(self, usr_name: str):
-        if self.db.execute(f"SELECT name FROM users WHERE name = '{usr_name}';"):
-            return
-        self.db.execute(
-            "INSERT INTO users(name) VAlUES({})".format(usr_name, "{}", "{}"))
+    def create_user(self, usr_name: str) -> int:
+        if self._exists(usr_name, "users"):
+            return -1
+        self.db.execute(f"""
+            INSERT INTO users(name) VAlUES(\'{usr_name}\')
+        """)
+        return 0
 
-    def create_event(self, users: list, event: str) -> None:
-        for user in users:
-            self.db.execute(
-                "INSERT INTO users(active_events) VALUES({}) WHERE name={};".format(event, user))
-            self.db.execute(
-                "INSERT INTO users(personal_events) VALUES({}) WHERE name={};".format(event, user))
+    def create_event(self, owner_name: str, event_name: str, descript: str, is_public: bool) -> int:
+        if self._exists(event_name, "event_types"):
+            return -1
+        owner_id = self._get_id_by_name(owner_name, "users")
+        if not owner_id:
+            return -2
+        self.db.execute(f"""
+            INSERT INTO event_types(owner, name, description, is_pubic)
+            VALUES({owner_id}, \'{event_name}\', \'{descript}\', \'{"TRUE" if is_public else "FALSE"}\');
+        """)
+        return 0
 
-    def get_event(self, user: str, datetime) -> str:
-        answer = str(self.db.execute(
-            """SELECT active_events FROM users WHERE;"""))
-        return answer
-
-    @property
-    def get_user(self) -> str:
-        answer = str(self.db.execute("SELECT * FROM users"))
-        return answer
+    @staticmethod
+    def parse_err(method_name: str, err_code: int) -> str:
+        unknown_code_msg = f"Unknown matching error code: {err_code} in method: {method_name}"
+        match method_name:
+            case "create_user":
+                match err_code:
+                    case  0: return "Привет!"
+                    case -1: return "Пользователь с этим именем уже существует"
+                    case  _: return unknown_code_msg
+            case "create_event":
+                match err_code:
+                    case  0: return "Событие успешно создано!"
+                    case -1: return "Событие с этим названием уже существует"
+                    case -2: return "Пользователь с вашим именем не найден. Вам необходимо сначала вызвать комнду start"
+                    case  _: return unknown_code_msg
+            case _:
+                return f"Unknown mathcing method name: {method_name}"
 
 
 class LinkerInteraction(Interaction):

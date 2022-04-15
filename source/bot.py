@@ -1,10 +1,8 @@
 from telebot import TeleBot
-from telebot import types as tb_types
 
 from .database import DataBase
 
 from .interaction import \
-    Interaction, \
     MasterInteraction, \
     LinkerInteraction
 
@@ -23,18 +21,26 @@ class MasterBot(Bot):
         super().__init__(self.act.get_token())
 
         @self.bot.message_handler(content_types=["text"])
-        def say_hello(message):
+        def handler(message):
             comm = message.text.split(" ")
             match comm[0]:
                 case "start":
-                    self.act.create_user(message.from_user.username)
-                    self.bot.send_message(message.chat.id, "hello")
+                    if len(comm) != 1:
+                        self.bot.send_message(
+                            message.chat.id, "Failed: неправильное количество аргументов команды")
+                        return
+                    err_c = self.act.create_user(message.from_user.username)
+                    msg = self.act.parse_err("create_user", err_c)
+                    self.bot.send_message(message.chat.id, msg)
                 case "create":
                     if len(comm) != 2:
                         self.bot.send_message(
-                            message.chat.id, "filed: wrong args nums")
-                    self.act.create_event(
-                        [message.from_user.username], comm[1])
+                            message.chat.id, "Failed: неправильное количество аргументов команды")
+                        return
+                    err_c = self.act.create_event(
+                        message.from_user.username, comm[1], "", True)
+                    msg = self.act.parse_err("create_event", err_c)
+                    self.bot.send_message(message.chat.id, msg)
 
 
 class LinkerBot(Bot):
