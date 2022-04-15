@@ -57,8 +57,8 @@ class MasterInteraction(Interaction):
         return 0
 
     def is_owner(self, owner_name: str, event_name: str) -> bool:
-        if self.db.execute("""EXISTS(SELECT {} FROM event_types WHERE name = {});"""\
-                .format(owner_name, event_name)) == "TRUE":
+        if self.db.execute("""EXISTS(SELECT {} FROM event_types WHERE name = {});"""
+                           .format(owner_name, event_name)) == "TRUE":
             return True
         return False
 
@@ -91,14 +91,10 @@ class MasterInteraction(Interaction):
                     case  _: return unknown_code_msg
             case "plan_event":
                 match err_code:
-                    case 0:
-                        return "Событие успешно запланировано"
-                    case -1:
-                        return "Пользователь с вашим именем не найден. Вам необходимо сначала вызвать комнду start"
-                    case -2:
-                        return  """Отказано в доступе! Данный пользователь не является владельцем данного события. Только владелец может назначать время проведения события."""
-                    case _:
-                        return unknown_code_msg
+                    case  0: return "Событие успешно запланировано"
+                    case -1: return "Пользователь с вашим именем не найден. Вам необходимо сначала вызвать комнду start"
+                    case -2: return """Отказано в доступе! Данный пользователь не является владельцем данного события. Только владелец может назначать время проведения события."""
+                    case  _: return unknown_code_msg
 
 
 class LinkerInteraction(Interaction):
