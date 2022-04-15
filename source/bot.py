@@ -22,6 +22,7 @@ class MasterBot(Bot):
 
         @self.bot.message_handler(content_types=["text"])
         def handler(message):
+            print("handle message:", message.text)
             comm = message.text.split(" ")
             match comm[0]:
                 case "start":
