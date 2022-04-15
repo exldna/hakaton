@@ -56,9 +56,9 @@ class MasterInteraction(Interaction):
         """)
         return 0
 
-    @staticmethod
-    def is_owner(owner_name: str, event_name: str) -> bool:
-        if """EXISTS(SELECT {} FROM event_types WHERE name = {});""".format(owner_name, event_name) == "TRUE":
+    def is_owner(self, owner_name: str, event_name: str) -> bool:
+        if self.db.execute("""EXISTS(SELECT {} FROM event_types WHERE name = {});"""\
+                .format(owner_name, event_name)) == "TRUE":
             return True
         return False
 
