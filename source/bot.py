@@ -53,7 +53,6 @@ class MasterBot(Bot):
                     self.bot.send_message(message.chat.id, msg)
 
 
-
 class LinkerBot(Bot):
     def __init__(self, db: DataBase) -> None:
         self.act = LinkerInteraction(db)
