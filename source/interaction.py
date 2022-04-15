@@ -56,6 +56,24 @@ class MasterInteraction(Interaction):
         """)
         return 0
 
+    def is_owner(self, owner_name: str, event_name: str) -> bool:
+        if self.db.execute("""EXISTS(SELECT {} FROM event_types WHERE name = {});"""\
+                .format(owner_name, event_name)) == "TRUE":
+            return True
+        return False
+
+    def plan_event(self, owner_name, event_name,  datetime):
+        owner_id = self._get_id_by_name(owner_name, "users")
+        if not owner_id:
+            return -1
+        if not self.is_owner(owner_name, event_name):
+            return -2
+        self.db.execute(f"""
+                    INSERT INTO events(datetime)
+                    VALUES({datetime});
+                """)
+        return 0
+
     @staticmethod
     def parse_err(method_name: str, err_code: int) -> str:
         unknown_code_msg = f"Unknown matching error code: {err_code} in method: {method_name}"
@@ -71,8 +89,16 @@ class MasterInteraction(Interaction):
                     case -1: return "Событие с этим названием уже существует"
                     case -2: return "Пользователь с вашим именем не найден. Вам необходимо сначала вызвать комнду start"
                     case  _: return unknown_code_msg
-            case _:
-                return f"Unknown mathcing method name: {method_name}"
+            case "plan_event":
+                match err_code:
+                    case 0:
+                        return "Событие успешно запланировано"
+                    case -1:
+                        return "Пользователь с вашим именем не найден. Вам необходимо сначала вызвать комнду start"
+                    case -2:
+                        return  """Отказано в доступе! Данный пользователь не является владельцем данного события. Только владелец может назначать время проведения события."""
+                    case _:
+                        return unknown_code_msg
 
 
 class LinkerInteraction(Interaction):
