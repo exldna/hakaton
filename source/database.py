@@ -1,49 +1,35 @@
-import sqlite3
+from multiprocessing import Queue, Process, Pipe
+from sqlite3 import connect as sqlite3_conn
 
-# from threading import Thread
-# from multiprocessing import Queue
 
-# from time import sleep
+def runner(queue: Queue, pipe, name: str) -> None:
+    with sqlite3_conn(name + ".sqlite", check_same_thread=False) as connect:
+        cursor = connect.cursor()
+        while True:
+            command = queue.get()
+            cursor.execute(command)
+            connect.commit()
+            pipe.send(cursor.fetchall())
 
 
 class DataBase(object):
-    # TODO: write thread-safety DB
-    # TODO: create DB backgrounds
-
     def __init__(self, name: str = "db") -> None:
-        self.connect = sqlite3.connect(
-            name + ".sqlite", check_same_thread=False)
-
-        self.cursor = self.connect.cursor()
-
-        # def run():
-        # TODO: multiple cursors
-        # while self.is_running:
-        # item = self.queue.get()
-        # if item != "":
-        # self.last_ans = self.__execute(item)
-        # self.is_get = False
-
-        # self.queue = Queue()
-        # self.thread = Thread(target=run)
-
-        # self.is_running = True
-        # self.is_get = True
-        # self.last_ans = None
-
-        # self.thread.start()
+        self.name = name
+        self.queue = Queue()
+        self.pipe_in, self.pipe_out = Pipe()
+        self.process = Process(target=runner, args=(
+            self.queue, self.pipe_in, self.name,))
+        self.process.start()
 
     def __del__(self) -> None:
-        self.connect.close()
-        # TODO: блокировка!
-        # self.is_running = False
-        # self.thread.join()
-        # self.queue.close()
+        self.queue.close()
+        self.pipe_in.close()
+        self.pipe_out.close()
+        self.process.terminate()
 
-    def execute(self, request: str):
-        self.cursor.execute(request)
-        self.connect.commit()
-        return self.cursor.fetchall()
+    def execute(self, command: str):
+        self.queue.put(command)
+        return self.pipe_out.recv()
 
     def create_tables(self):
         self.execute("""
@@ -89,13 +75,3 @@ class DataBase(object):
                 '5157776609:AAGVT7kYK_ep0Ezu3Fz2-tcav7lfAe1poDQ'
             );
         """)
-
-    # def __execute(self, request: str):
-        # self.queue.put(request)
-        # return self.get()
-
-    # def get(self):
-        # while self.is_get:
-        # sleep(0.01)
-        # self.is_get = True
-        # return self.last_ans
