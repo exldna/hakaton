@@ -58,7 +58,7 @@ class MasterInteraction(Interaction):
 
     @staticmethod
     def is_owner(owner_name: str, event_name: str) -> bool:
-        if """EXISTS(SELECT {} FROM event_types WHERE name = {};)""".format(owner_name, event_name) == "YES":
+        if """EXISTS(SELECT {} FROM event_types WHERE name = {});""".format(owner_name, event_name) == "YES":
             return True
         return False
 
@@ -96,8 +96,7 @@ class MasterInteraction(Interaction):
                     case -1:
                         return "Пользователь с вашим именем не найден. Вам необходимо сначала вызвать комнду start"
                     case -2:
-                        return  """Отказано в доступе! Данный пользователь не является владельцем
-                          данного события. Только владелец может назначать время проведения события."""
+                        return  """Отказано в доступе! Данный пользователь не является владельцем данного события. Только владелец может назначать время проведения события."""
                     case _:
                         return unknown_code_msg
 
