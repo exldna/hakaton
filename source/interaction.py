@@ -83,6 +83,21 @@ class MasterInteraction(Interaction):
                 """)
         return 0
 
+    def subscribe(self, username:str, event_name: str):
+            owner_id = self._get_id_by_name(username, "users")
+            if not owner_id:
+                return -1
+            if not self.is_owner(username, event_name):
+                return -2
+            if self.find_event(event_name):
+                return -3
+            self.db.execute(f"""
+                               INSERT INTO events(subscribed_users)
+                               VALUES(\'{owner_id}\');
+                           """)
+            return 0
+
+
     @staticmethod
     def parse_err(method_name: str, err_code: int) -> str:
         unknown_code_msg = f"Unknown matching error code: {err_code} in method: {method_name}"
@@ -105,7 +120,11 @@ class MasterInteraction(Interaction):
                     case -2: return """Отказано в доступе! Данный пользователь не является владельцем данного события. Только владелец может назначать время проведения события."""
                     case -3: return """Нельзя запланировать событие, не создав его"""
                     case  _: return unknown_code_msg
-
+            case "subscribe":
+                match err_code:
+                    case 0: return "Подписка на событие оформлена!"
+                    case -1: return "Вы уже и так подписаны на это событие"
+                    case -2: return "Такого события пока не существует,но вы легко можете его создать!"
 
 class LinkerInteraction(Interaction):
     def __init__(self, db: DataBase) -> None:
