@@ -57,20 +57,29 @@ class MasterInteraction(Interaction):
         return 0
 
     def is_owner(self, owner_name, event_name: str) -> bool:
-        if self.db.execute("""EXISTS(SELECT id FROM event_types WHERE name = \'{}\'AND owner = \'{}\');"""\
-                .format(event_name, owner_name)) == "TRUE":
+        if str(self.db.execute("""SELECT id from event_types WHERE\
+        EXISTS(SELECT id FROM event_types WHERE name = \'{}\'AND owner = \'{}\');"""\
+                .format(event_name, owner_name))) == "":
             return True
         return False
+
+    def find_event(self, event):
+        if str(self.db.execute("""SELECT id from event_types WHERE EXISTS(SELECT id FROM event_types WHERE\
+        name = \'{}\')""".format(event))) == "":
+            return False
+        return True
 
     def plan_event(self, owner_name, event_name,  datetime):
         owner_id = self._get_id_by_name(owner_name, "users")
         if not owner_id:
             return -1
-        if not self.is_owner(owner_name, event_name):
+        if self.is_owner(owner_name, event_name):
             return -2
+        if self.find_event(event_name):
+            return -3
         self.db.execute(f"""
-                    INSERT INTO events(datetime)
-                    VALUES({datetime});
+                    INSERT INTO events(base_type, datetime)
+                    VALUES(\'{owner_id}\', \'{datetime}\');
                 """)
         return 0
 
@@ -94,6 +103,7 @@ class MasterInteraction(Interaction):
                     case  0: return "Событие успешно запланировано"
                     case -1: return "Пользователь с вашим именем не найден. Вам необходимо сначала вызвать комнду start"
                     case -2: return """Отказано в доступе! Данный пользователь не является владельцем данного события. Только владелец может назначать время проведения события."""
+                    case -3: return """Нельзя запланировать событие, не создав его"""
                     case  _: return unknown_code_msg
 
 

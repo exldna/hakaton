@@ -53,13 +53,14 @@ class DataBase(object):
         self.execute("""
             CREATE TABLE IF NOT EXISTS event_types(
                 id INTEGER PRIMARY KEY,
-                owner INT UNSIGNED NOT NULL,
+                owner TEXT,
                 name TEXT,
                 description TEXT,
                 is_pubic BOOlEAN
             );
         """)
 
+    #INT UNSIGNED NOT NULL
     def insert_private_info(self):
         self.execute("""
             CREATE TABLE IF NOT EXISTS private_info(
