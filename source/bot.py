@@ -22,6 +22,7 @@ class MasterBot(Bot):
 
         @self.bot.message_handler(content_types=["text"])
         def handler(message):
+            # TODO: написать нормальный хендлер (парсить сообщения, а не строки)
             print("handle message:", message.text)
             comm = message.text.split(" ")
             match comm[0]:
@@ -32,7 +33,6 @@ class MasterBot(Bot):
                         return
                     err_c = self.act.create_user(message.from_user.username)
                     msg = self.act.parse_err("create_user", err_c)
-                    self.bot.send_message(message.chat.id, msg)
                 case "create":
                     if len(comm) != 2:
                         self.bot.send_message(
@@ -41,7 +41,6 @@ class MasterBot(Bot):
                     err_c = self.act.create_event(
                         message.from_user.username, comm[1], "", True)
                     msg = self.act.parse_err("create_event", err_c)
-                    self.bot.send_message(message.chat.id, msg)
                 case "plan":
                     if len(comm) != 3:
                         self.bot.send_message(
@@ -50,7 +49,6 @@ class MasterBot(Bot):
                     err_c = self.act.plan_event(
                         message.from_user.username, comm[1], comm[2])
                     msg = self.act.parse_err("plan_event", err_c)
-                    self.bot.send_message(message.chat.id, msg)
                 case "subscribe":
                     if len(comm) != 3:
                         self.bot.send_message(
@@ -59,7 +57,9 @@ class MasterBot(Bot):
                     err_c = self.act.subscribe(
                         message.from_user.username, comm[1])
                     msg = self.act.parse_err("plan_event", err_c)
-                    self.bot.send_message(message.chat.id, msg)
+                case _:
+                    msg = "Я не знаю такой команды!"
+            self.bot.send_message(message.chat.id, msg)
 
 
 class LinkerBot(Bot):

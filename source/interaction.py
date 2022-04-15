@@ -78,9 +78,9 @@ class MasterInteraction(Interaction):
         if self.find_event(event_name):
             return -3
         self.db.execute(f"""
-                    INSERT INTO events(base_type, datetime)
-                    VALUES(\'{owner_id}\', \'{datetime}\');
-                """)
+            INSERT INTO events(base_type, datetime)
+            VALUES(\'{owner_id}\', \'{datetime}\');
+        """)
         return 0
 
     def subscribe(self, username:str, event_name: str):
@@ -92,9 +92,9 @@ class MasterInteraction(Interaction):
             if self.find_event(event_name):
                 return -3
             self.db.execute(f"""
-                               INSERT INTO events(subscribed_users)
-                               VALUES(\'{owner_id}\');
-                           """)
+                INSERT INTO events(subscribed_users)
+                VALUES(\'{owner_id}\');
+            """)
             return 0
 
 
