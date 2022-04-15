@@ -74,20 +74,6 @@ class MasterInteraction(Interaction):
             case _:
                 return f"Unknown mathcing method name: {method_name}"
 
-<<<<<<< HEAD
-    def set_event(self, username: str, event:str)->None:
-        self.db.execute("INSERT INTO users(active_events) VALUES({}) WHERE name={};".format(event, username))
-
-    def create_event(self, users: list, event: str):
-        self.db.execute("INSERT INTO ")
-
-        for user in users:
-            self.db.execute("INSERT INTO users(active_events) VALUES({}) WHERE name={};".format(event, user))
-            self.db.execute("INSERT INTO users(personal_events) VALUES({}) WHERE name={};".format(event, user))
-
-
-=======
->>>>>>> b7b771ab8563ff31ae21f1c3b30bc6f58ea999a0
 
 class LinkerInteraction(Interaction):
     def __init__(self, db: DataBase) -> None:
