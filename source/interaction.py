@@ -1,5 +1,4 @@
-from database import DataBase
-
+from .database import DataBase
 
 class Interaction(object):
     def __init__(self, db: DataBase) -> None:
@@ -69,14 +68,37 @@ class MasterInteraction(Interaction):
             return False
         return True
 
+    @staticmethod
+    def check_datetime(datetime: str):
+        if datetime.count(':') != 3 or datetime.count('-') != 1 or \
+                sum(map(lambda x: x.isdigit(), datetime)) != 12:
+            raise ValueError("FormatError")
+        year, month, day, time = datetime.split(':')
+        hour, minutes = time.split('-')
+        if int(year) < 2022 or int(month) < 1 or int(month) > 12 \
+                or int(day) > 31 or int(day) < 1 or int(hour) < 0 or int(hour) > 23\
+                or int(minutes) < 0 or int(minutes) > 59:
+            raise ValueError("IncorrectData")
+
+
     def plan_event(self, owner_name, event_name,  datetime):
         owner_id = self._get_id_by_name(owner_name, "users")
         if not owner_id:
             return -1
         if self.is_owner(owner_name, event_name):
             return -2
-        if self.find_event(event_name):
+        if not self.find_event(event_name):
             return -3
+
+        try:
+            self.check_datetime(datetime)
+        except ValueError as err:
+            if str(err) == "FormatError":
+                print(err.args, type(err.args))
+                return -4
+            else:
+                return -5
+
         self.db.execute(f"""
             INSERT INTO events(base_type, datetime)
             VALUES(\'{owner_id}\', \'{datetime}\');
@@ -90,7 +112,7 @@ class MasterInteraction(Interaction):
                 return -1
             if not self.is_owner(username, event_name):
                 return -2
-            if self.find_event(event_name):
+            if not self.find_event(event_name):
                 return -3
             self.db.execute(f"""
                 INSERT INTO events(subscribed_users)
@@ -121,6 +143,8 @@ class MasterInteraction(Interaction):
                     case -1: return "Пользователь с вашим именем не найден. Вам необходимо сначала вызвать комнду start"
                     case -2: return """Отказано в доступе! Данный пользователь не является владельцем данного события. Только владелец может назначать время проведения события."""
                     case -3: return """Нельзя запланировать событие, не создав его"""
+                    case -4: return """Неправильный формат данных. Перечитайте документацию!"""
+                    case -5: return """Такой даты не существует!"""
                     case  _: return unknown_code_msg
             case "subscribe":
                 match err_code:
