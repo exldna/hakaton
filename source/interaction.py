@@ -1,4 +1,5 @@
 from .database import DataBase
+import datetime as dt
 
 class Interaction(object):
     def __init__(self, db: DataBase) -> None:
@@ -70,14 +71,17 @@ class MasterInteraction(Interaction):
 
     @staticmethod
     def check_datetime(datetime: str):
+        now = dt.datetime.now()
         if datetime.count(':') != 3 or datetime.count('-') != 1 or \
                 sum(map(lambda x: x.isdigit(), datetime)) != 12:
             raise ValueError("FormatError")
         year, month, day, time = datetime.split(':')
         hour, minutes = time.split('-')
-        if int(year) < 2022 or int(month) < 1 or int(month) > 12 \
-                or int(day) > 31 or int(day) < 1 or int(hour) < 0 or int(hour) > 23\
+        if int(month) < 1 or int(month) > 12 or int(day) > 31 \
+                or int(day) < 1 or int(hour) < 0 or int(hour) > 23\
                 or int(minutes) < 0 or int(minutes) > 59:
+            raise ValueError("IncorrectData")
+        if now.year > year:
             raise ValueError("IncorrectData")
 
 
