@@ -1,10 +1,6 @@
 from telebot import TeleBot
-
-from .database import DataBase
-
-from .interaction import \
-    MasterInteraction, \
-    LinkerInteraction
+from database import DataBase
+from interaction import MasterInteraction, LinkerInteraction
 
 
 class Bot(object):
@@ -53,6 +49,15 @@ class MasterBot(Bot):
                     self.bot.send_message(message.chat.id, msg)
                 case "subscribe":
                     if len(comm) != 3:
+                        self.bot.send_message(
+                            message.chat.id, "Failed: неправильное количество аргументов команды")
+                        return
+                    err_c = self.act.subscribe(
+                        message.from_user.username, comm[1])
+                    msg = self.act.parse_err("plan_event", err_c)
+                    self.bot.send_message(message.chat.id, msg)
+                case "event_info":
+                    if len(comm) != 2:
                         self.bot.send_message(
                             message.chat.id, "Failed: неправильное количество аргументов команды")
                         return

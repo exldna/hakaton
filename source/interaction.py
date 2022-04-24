@@ -1,4 +1,4 @@
-from .database import DataBase
+from database import DataBase
 
 
 class Interaction(object):
@@ -83,6 +83,7 @@ class MasterInteraction(Interaction):
                 """)
         return 0
 
+
     def subscribe(self, username:str, event_name: str):
             owner_id = self._get_id_by_name(username, "users")
             if not owner_id:
@@ -96,6 +97,7 @@ class MasterInteraction(Interaction):
                                VALUES(\'{owner_id}\');
                            """)
             return 0
+
 
 
     @staticmethod
@@ -125,6 +127,7 @@ class MasterInteraction(Interaction):
                     case 0: return "Подписка на событие оформлена!"
                     case -1: return "Вы уже и так подписаны на это событие"
                     case -2: return "Такого события пока не существует,но вы легко можете его создать!"
+
 
 class LinkerInteraction(Interaction):
     def __init__(self, db: DataBase) -> None:
