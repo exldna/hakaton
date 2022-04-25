@@ -21,6 +21,13 @@ class MasterBot(Bot):
             # TODO: написать нормальный хендлер (парсить сообщения, а не строки)
             print("handle message:", message.text)
             comm = message.text.split(" ")
+
+            forbidden_words = ('Пидорас', 'пидорас', 'пидор', 'Пидор', 'Даун', 'даун',
+                               'Додик', 'додик', 'Негр', 'негр')
+
+            if set(comm).intersection(forbidden_words):
+                    return self.bot.send_photo(message.chat.id, 'https://i.ytimg.com/vi/SGIfsNYb1_8/maxresdefault.jpg')
+
             match comm[0]:
                 case "start":
                     if len(comm) != 1:
